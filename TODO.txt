@@ -1,0 +1,25 @@
+* Fix ncavps (buffett) swedish and us.
+
+* Consider to clean code to have minimal amount of code in Notebook
+	(write plot functions to return plot only).
+
+* Add filter to stock (Appendix A), Stock trace Appendix B. E.g.
+    yield > 0.03, payout < 0.7, pe < 20. Print DF with relevant values
+
+* Solve currency problem (sek/USD eg)
+
+* Fixa yield/payoutratio
+
+* Remove bars with zeros in catplot
+
+* Add more stocks to dividends months
+
+* Add introduction
+
+* Add explanations
+
+* Clean up code, consider to move everything to helper functions that only returns different plot objects
+
+* Add index that are listed
+
+* Add stocks: Abbvie, cardinal health chevron, legget platt, kimberly clark
