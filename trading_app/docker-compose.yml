@@ -1,0 +1,62 @@
+version: "3.2"
+
+services:
+  nginx:
+      build: ./nginx
+      image: 192.168.1.101:5000/nginx
+      ports:
+          - "81:80"
+      volumes:
+          - static_volume:/home/app/microservice/static
+      depends_on:
+          - ganalyser
+      restart: "always"
+      environment:
+          - DATABASE=postgres
+          - SQL_HOST=db
+          - SQL_PORT=5432
+  ganalyser:
+    build: .
+    ports:
+      - "5000:5000"
+    image: ganalyser
+    volumes:
+        - type: bind
+          source: ~/journal
+          target: /journal
+    restart: "always"
+    depends_on:
+        - db
+        - kafka_consumer_signal
+    command: "gunicorn -b 0.0.0.0:5000 index:server -t 200 \
+              --capture-output --log-level debug"
+  db:
+    build: ./db
+    ports:
+        - "5400:5432"
+    environment:
+        - POSTGRES_USER=admin
+        - POSTGRES_PASSWORD=admin
+  zookeeper:
+    image: wurstmeister/zookeeper:3.4.6
+    ports:
+     - "2181:2181"
+    tmpfs: "/datalog"
+  pg-admin:
+    container_name: pg_admin4
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+        PGADMIN_DEFAULT_EMAIL: admin@admin.com
+        PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+        - "5050:80"
+    volumes:
+        - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+        - db
+
+volumes:
+    static_volume:
+    pgadmin-data:
+    pgdata:
